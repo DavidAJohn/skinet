@@ -13,7 +13,7 @@
             <ul class="list-group my-3">
                 <li class="list-group-item" 
                     *ngFor="let brand of brands"
-                    [class.active]="brand.id === this.brandIdSelected"
+                    [class.active]="brand.id === shopParams.brandId"
                     [value]="brand.id"
                     (click)="onBrandSelected(brand.id)"
                 >
@@ -24,7 +24,7 @@
             <ul class="list-group my-3">
                 <li class="list-group-item" 
                     *ngFor="let type of types"
-                    [class.active]="type.id === this.typeIdSelected"
+                    [class.active]="type.id === shopParams.typeId"
                     [value]="type.id"
                     (click)="onTypeSelected(type.id)"
                 >
@@ -36,7 +36,21 @@
         <section class="col-9">
             <div class="d-flex justify-content-between align-items-center pb-2">
                 <header>
-                    <span>Showing <strong>10</strong> of <strong>18</strong> Results</span>
+                    <span *ngIf="totalCount && totalCount > 0; else elseBlock" >
+                        Showing 
+                        <strong>{{(shopParams.pageNumber - 1) * shopParams.pageSize + 1}}</strong> - 
+                        <strong>{{(shopParams.pageNumber * shopParams.pageSize) > totalCount
+                                ? totalCount
+                                : shopParams.pageNumber * shopParams.pageSize
+                                }}
+                        </strong>
+                        of 
+                        <strong>{{totalCount}}</strong> 
+                        Results
+                    </span>
+                    <ng-template #elseBlock>
+                        <strong>No Results</strong>
+                    </ng-template>
                 </header>
                 <div class="form-inline mt-2">
                     <input type="text" class="form-control mr-2" style="width: 300px;" placeholder="Search">
@@ -50,6 +64,20 @@
                     <app-product-item [product]="item"></app-product-item>
                 </div> 
             </div>
+
+            <div *ngIf="totalCount && totalCount > 0" class="d-flex justify-content-center">
+                <pagination 
+                    [boundaryLinks]="true" 
+                    [totalItems]="totalCount" 
+                    (pageChanged)="onPageChanged($event)"
+                    [itemsPerPage]="shopParams.pageSize"
+                    previousText="&lsaquo;" 
+                    nextText="&rsaquo;" 
+                    firstText="&laquo;" 
+                    lastText="&raquo;">
+                </pagination>
+            </div>
+            
         </section>
 
     </div>
