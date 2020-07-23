@@ -35,23 +35,12 @@
 
         <section class="col-9">
             <div class="d-flex justify-content-between align-items-center pb-2">
-                <header>
-                    <span *ngIf="totalCount && totalCount > 0; else elseBlock" >
-                        Showing 
-                        <strong>{{(shopParams.pageNumber - 1) * shopParams.pageSize + 1}}</strong> - 
-                        <strong>{{(shopParams.pageNumber * shopParams.pageSize) > totalCount
-                                ? totalCount
-                                : shopParams.pageNumber * shopParams.pageSize
-                                }}
-                        </strong>
-                        of 
-                        <strong>{{totalCount}}</strong> 
-                        Results
-                    </span>
-                    <ng-template #elseBlock>
-                        <strong>No Results</strong>
-                    </ng-template>
-                </header>
+                <app-paging-header
+                    [totalCount]="totalCount"
+                    [pageSize]="shopParams.pageSize"
+                    [pageNumber]="shopParams.pageNumber"
+                >
+                </app-paging-header>
                 <div class="form-inline mt-2">
                     <input type="text" class="form-control mr-2" style="width: 300px;" placeholder="Search">
                     <button class="btn btn-outline-primary my-2">Search</button>
@@ -65,18 +54,12 @@
                 </div> 
             </div>
 
-            <div *ngIf="totalCount && totalCount > 0" class="d-flex justify-content-center">
-                <pagination 
-                    [boundaryLinks]="true" 
-                    [totalItems]="totalCount" 
-                    (pageChanged)="onPageChanged($event)"
-                    [itemsPerPage]="shopParams.pageSize"
-                    previousText="&lsaquo;" 
-                    nextText="&rsaquo;" 
-                    firstText="&laquo;" 
-                    lastText="&raquo;">
-                </pagination>
-            </div>
+            <app-pager
+                [pageSize]="shopParams.pageSize"
+                [totalCount]="totalCount"
+                (pageChanged)="onPageChanged($event)"
+            >
+            </app-pager>
             
         </section>
 
