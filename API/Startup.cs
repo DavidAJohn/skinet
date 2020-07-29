@@ -36,7 +36,7 @@ namespace API
             });
 
             services.AddApplicationServices(); // custom services extension
-            services.AddIdentityServices(); // custom services extension
+            services.AddIdentityServices(_config); // custom services extension
             services.AddSwaggerServiceOptions(); // custom services extension
             services.AddCors(opt =>
             {
@@ -62,6 +62,7 @@ namespace API
 
             app.UseCors("CorsPolicy");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSwaggerConfig(); // custom app config
