@@ -20,13 +20,16 @@ export class AppComponent implements OnInit{
 
   loadCurrentUser() {
     const token = localStorage.getItem('token');
-    if (token) {
-      this.accountService.loadCurrentUser(token).subscribe(() => {
+
+    this.accountService.loadCurrentUser(token).subscribe(
+      () => {
         console.log('loaded user');
-      }, error => {
+      },
+      (error) => {
         console.log(error);
-      });
-    }
+      }
+    );
+
   }
 
   loadBasket() {
