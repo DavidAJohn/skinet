@@ -2,6 +2,7 @@ import { CheckoutRoutingModule } from './checkout-routing.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CheckoutComponent } from './checkout.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -9,7 +10,8 @@ import { CheckoutComponent } from './checkout.component';
   declarations: [CheckoutComponent],
   imports: [
     CommonModule,
-    CheckoutRoutingModule
+    CheckoutRoutingModule,
+    SharedModule
   ]
 })
 export class CheckoutModule { }
