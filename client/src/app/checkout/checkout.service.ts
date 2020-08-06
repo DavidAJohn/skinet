@@ -1,3 +1,4 @@
+import { IOrderToCreate } from './../shared/models/order';
 import { IDeliveryMethod } from './../shared/models/deliveryMethod';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -19,5 +20,9 @@ export class CheckoutService {
           return dm.sort((a, b) => b.price - a.price); // sorts by highest price first
         })
       );
+  }
+
+  createOrder(order: IOrderToCreate) {
+    return this.http.post(this.baseUrl + 'orders', order);
   }
 }

@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Router, NavigationExtras } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { BasketService } from 'src/app/basket/basket.service';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { CheckoutService } from '../checkout.service';
+import { IBasket } from 'src/app/shared/models/basket';
+import { IOrder } from 'src/app/shared/models/order';
 
 @Component({
   selector: 'app-checkout-payment',
@@ -6,10 +13,37 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./checkout-payment.component.scss']
 })
 export class CheckoutPaymentComponent implements OnInit {
+  @Input() checkoutForm: FormGroup;
 
-  constructor() { }
+  constructor(private basketService: BasketService,
+              private checkoutService: CheckoutService,
+              private toastrService: ToastrService,
+              private router: Router) { }
 
   ngOnInit(): void {
   }
 
+  submitOrder() {
+    const basket = this.basketService.getCurrentBasketValue();
+    const orderToCreate = this.getOrderToCreate(basket);
+    this.checkoutService.createOrder(orderToCreate)
+      .subscribe((order: IOrder) => {
+        this.toastrService.success('Order created successfully');
+        this.basketService.deleteLocalBasket();
+        const navigationExtras: NavigationExtras = {state: order};
+        this.router.navigate(['checkout/success'], navigationExtras);
+        console.log(order);
+      }, error => {
+        this.toastrService.error(error.message);
+        console.log(error);
+      });
+  }
+
+  private getOrderToCreate(basket: IBasket) {
+    return {
+      basketId: basket.id,
+      deliveryMethodId: +this.checkoutForm.get('deliveryForm').get('deliveryMethod').value,
+      shipToAddress: this.checkoutForm.get('addressForm').value
+    };
+  }
 }
