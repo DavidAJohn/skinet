@@ -6,12 +6,16 @@ import { IPagination } from '../shared/models/pagination';
 import { map } from 'rxjs/operators';
 import { ShopParams } from '../shared/models/shopParams';
 import { Product } from '../shared/models/product';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShopService {
   private baseUrl = 'https://localhost:5001/api/';
+  products: Product[] = [];
+  brands: Brand[] = [];
+  productTypes: ProductType[] = [];
 
   constructor(private http: HttpClient) {
   }
@@ -44,14 +48,40 @@ export class ShopService {
   }
 
   getProduct(id: number) {
+    const product = this.products.find(p => p.id === id);
+
+    if (product) {
+      return of(product); // return an Observable of products
+    }
+
     return this.http.get<Product>(this.baseUrl + 'products/' + id);
   }
 
   getProductTypes() {
-    return this.http.get<ProductType[]>(this.baseUrl + 'products/types');
+    if (this.productTypes.length > 0) {
+      return of(this.productTypes); // return an Observable of product types
+    }
+
+    return this.http.get<ProductType[]>(this.baseUrl + 'products/types')
+      .pipe(
+        map(response => {
+          this.productTypes = response; // 'cache' the response
+          return response;
+        })
+      );
   }
 
   getProductBrands() {
-    return this.http.get<Brand[]>(this.baseUrl + 'products/brands');
+    if (this.brands.length > 0) {
+      return of(this.brands); // return an Observable of product brands
+    }
+
+    return this.http.get<Brand[]>(this.baseUrl + 'products/brands')
+      .pipe(
+        map(response => {
+          this.brands = response; // 'cache' the response
+          return response;
+        })
+      );
   }
 }
