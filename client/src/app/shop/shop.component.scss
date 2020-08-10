@@ -2,4 +2,25 @@
     background: grey;
     color: white;
     transform: scale(1.2);
+}
+
+.list-group-item {
+  cursor: pointer;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.1em;
+
+  &:focus {
+    outline: none;
   }
+
+  &.active {
+    border-radius: 10px;
+  }
+
+  &:not(.active):hover {
+    color: #fff;
+    background-color: #e95620b4;
+    border-radius: 10px;
+  }
+}

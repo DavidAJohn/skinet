@@ -18,6 +18,9 @@ export class LoadingInterceptor implements HttpInterceptor {
     if (request.method === 'POST' && request.url.includes('orders')) { // disable on order paid
       return next.handle(request);
     }
+    if (request.method === 'DELETE') { // when basket is deleted
+      return next.handle(request);
+    }
     if (request.url.includes('emailexists')) {
       return next.handle(request);
     }
